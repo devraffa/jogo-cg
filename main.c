@@ -1,5 +1,7 @@
 #include <GL/glut.h>
+#include <stdlib.h>
 #include "cameraman.h"
+#include "objeto3d.h"
 
 extern void config_camera(int altura, int largura);
 extern void teclado_especial(int key, int x, int y);
@@ -11,6 +13,8 @@ typedef struct {
     GLfloat especular[4];
     GLfloat brilho;
 } MaterialSimples;
+
+static Objeto3D *raquete_modelo = NULL;
 
 static MaterialSimples material_vermelho = {
     {0.30f, 0.05f, 0.05f, 1.0f},
@@ -113,20 +117,25 @@ void desenhar_bola() {
     glPopMatrix();
 }
 
-void desenhar_raquete_caixa(float x, float z, MaterialSimples material, float r, float g, float b) {
+void desenhar_raquete_importada(float x, float z, float angulo, MaterialSimples material, float r, float g, float b) {
+    if (raquete_modelo == NULL) {
+        return;
+    }
+
     glPushMatrix();
     aplicar_material(material, r, g, b);
     glTranslatef(x, 0.45f, z);
-    glScalef(0.35f, 0.20f, 1.05f);
-    glutSolidCube(1.0f);
+    glRotatef(angulo, 0.0f, 1.0f, 0.0f);
+    glScalef(0.9f, 0.9f, 0.9f);
+    desenhar_objeto_3d(raquete_modelo);
     glPopMatrix();
 }
 
 void desenhar_cenario() {
     desenhar_mesa();
     desenhar_bola();
-    desenhar_raquete_caixa(-2.6f, 0.0f, material_vermelho, 0.85f, 0.20f, 0.20f);
-    desenhar_raquete_caixa(2.6f, 0.0f, material_azul, 0.20f, 0.45f, 0.90f);
+    desenhar_raquete_importada(-2.6f, 0.0f, 0.0f, material_vermelho, 0.85f, 0.20f, 0.20f);
+    desenhar_raquete_importada(2.6f, 0.0f, 180.0f, material_azul, 0.20f, 0.45f, 0.90f);
 }
 
 void display() {
@@ -168,6 +177,7 @@ int main(int argc, char** argv) {
     glutCreateWindow("Ping Pong 3D");
 
     iniciar_cena();
+    raquete_modelo = carregar_objeto_3d("raquete.obj");
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -175,5 +185,7 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(teclado_comum);
 
     glutMainLoop();
+
+    liberar_objeto_3d(raquete_modelo);
     return 0;
 }
