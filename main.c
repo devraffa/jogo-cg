@@ -148,10 +148,6 @@ void display() {
 }
 
 void init(int largura, int altura) {
-    if (altura == 0) altura = 1; 
-    
-    glViewport(0, 0, largura, altura); 
-void reshape(int largura, int altura) {
     if (altura == 0) {
         altura = 1;
     }
@@ -172,6 +168,9 @@ void iniciar_cena() {
     glClearDepth(1.0f);
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
+
+    glEnable(GL_LIGHTING); 
+    glEnable(GL_LIGHT0);
 }
 
 int main(int argc, char** argv) {
