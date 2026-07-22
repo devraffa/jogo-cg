@@ -26,7 +26,7 @@ void display() {
     glutSwapBuffers();
 }
 
-void reshape(int largura, int altura) {
+void init(int largura, int altura) {
     if (altura == 0) altura = 1; 
     
     glViewport(0, 0, largura, altura); 
@@ -49,9 +49,11 @@ int main(int argc, char** argv) {
     glEnable(GL_DEPTH_TEST); 
 
     glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
+    glutReshapeFunc(init);
     glutSpecialFunc(teclado_especial);
     glutKeyboardFunc(teclado_comum);
+    glutMouseFunc(controle_mouse);
+    glutMotionFunc(movimento_mouse);
 
     glutMainLoop(); 
     return 0;
